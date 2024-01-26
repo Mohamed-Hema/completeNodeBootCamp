@@ -1,4 +1,6 @@
 const fs = require("fs");
+const http = require("http");
+
 // blocking
 // const textIn = fs.readFileSync("./txt/input.txt", "utf-8");
 // console.log(textIn);
@@ -8,9 +10,10 @@ const fs = require("fs");
 // console.log("File written!");
 
 // Non Blocking ASYNC
-fs.readFile("./txt/start.txt", "utf-8", (err, data1) => {
-  fs.readFile(`./txt/${data1}.txt`, "utf-8", (err, data2) => {
-    console.log(data2);
-  });
-});
-console.log("Will read file!");
+// fs.readFile("./txt/start.txt", "utf-8", (err, data1) => {
+//   fs.readFile(`./txt/${data1}.txt`, "utf-8", (err, data2) => {
+//     console.log(data2);
+//   });
+//   w;
+// });
+// console.log("Will read file!");
