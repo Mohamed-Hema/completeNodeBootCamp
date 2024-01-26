@@ -1,6 +1,7 @@
 const fs = require("fs");
 const http = require("http");
-
+//================================================================>
+//Files =================================================<
 // blocking
 // const textIn = fs.readFileSync("./txt/input.txt", "utf-8");
 // console.log(textIn);
@@ -17,3 +18,6 @@ const http = require("http");
 //   w;
 // });
 // console.log("Will read file!");
+http.createServer((req, res) => {
+  res.end("Hello from the server!");
+});
