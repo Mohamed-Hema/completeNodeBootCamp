@@ -1,5 +1,7 @@
 const fs = require("fs");
 const http = require("http");
+const url = require("url");
+
 //================================================================>
 //Files =================================================<
 // blocking
@@ -19,8 +21,15 @@ const http = require("http");
 // });
 // console.log("Will read file!");
 const server = http.createServer((req, res) => {
-  console.log(req);
-  res.end("Hello from the server!");
+  const pathName = req.url;
+
+  if (pathName === "/" || pathName === "/overview") {
+    res.end("This is overview");
+  } else if (pathName === "/product") {
+    res.end("This is product");
+  } else {
+    res.end("Hello from the server!");
+  }
 });
 
 server.listen(8000, "127.0.0.1", () => {
