@@ -1,45 +1,75 @@
 const fs = require("fs");
 const http = require("http");
 const url = require("url");
+const path = require("path"); // Add this line to import the 'path' module
 
-//================================================================>
-//Files =================================================<
-// blocking
-// const textIn = fs.readFileSync("./txt/input.txt", "utf-8");
-// console.log(textIn);
+const replaceTemplate = (temp, product) => {
+  let output = temp.replace(/{%PRODUCTNAME%}/g, product.productName);
+  output = output.replace(/{%IMAGE%}/g, product.image);
+  output = output.replace(/{%PRICE%}/g, product.price);
+  output = output.replace(/{%FROM%}/g, product.from);
+  output = output.replace(/{%NUTRIANTS%}/g, product.nutriants);
+  output = output.replace(/{%QUANTITY%}/g, product.quantity);
+  output = output.replace(/{%DESCRIPTION%}/g, product.description);
+  output = output.replace(/{%ID%}/g, product.id);
+  if (!product.organic)
+    output = output.replace(/{%NOT_ORGANIC%}/g, "not-organic");
+};
 
-// const textOut = `This is what we know about the avocado ${textIn}.\nCreated on ${Date.now()}`;
-// fs.writeFileSync("./txt/output.txt", textOut);
-// console.log("File written!");
+const tempOverview = fs.readFileSync(
+  path.join(__dirname, "templates/template-overview.html"),
+  "utf-8"
+);
+const tempCard = fs.readFileSync(
+  path.join(__dirname, "templates/template-card.html"),
+  "utf-8"
+);
+const tempProduct = fs.readFileSync(
+  path.join(__dirname, "templates/template-product.html"),
+  "utf-8"
+);
 
-// Non Blocking ASYNC
-// fs.readFile("./txt/start.txt", "utf-8", (err, data1) => {
-//   fs.readFile(`./txt/${data1}.txt`, "utf-8", (err, data2) => {
-//     console.log(data2);
-//   });
-//   w;
-// });
-// console.log("Will read file!");
+const data = fs.readFileSync(
+  path.join(__dirname, "dev-data/data.json"),
+  "utf-8"
+);
+const dataObj = JSON.parse(data);
+
 const server = http.createServer((req, res) => {
   const pathName = req.url;
 
+  //overviewPage
   if (pathName === "/" || pathName === "/overview") {
-    res.end("This is overview");
+    res.writeHead(200, {
+      "Content-type": "text/html",
+    });
+
+    const cardsHTML = dataObj.map((el) => replaceTemplate(tempCard, el));
+    console.log(cardsHTML);
+
+    res.end(tempOverview);
+
+    //Product Page
   } else if (pathName === "/product") {
     res.end("This is product");
+
+    //API
   } else if (pathName === "/api") {
-    fs.readFile(`${__dirname}/dev-data/data.json`, (err, data) => {
-      const productData = JSON.parse(data);
-      res.writeHead(200, {
-        "Content-type": "application/json",
-      });
-      res.end(data);
+    res.writeHead(200, {
+      "Content-type": "application/json",
     });
+    res.end(data);
+
+    //Not Found
   } else {
-    res.end("Hello from the server!");
+    res.writeHead(404, {
+      "Content-type": "text/html",
+      "my-own-header": "hello-world",
+    });
+    res.end("<h1>Page Not Found</h1>");
   }
 });
 
 server.listen(8000, "127.0.0.1", () => {
-  console.log("listening to requestes on port 8000");
+  console.log("listening to requests on port 8000");
 });
