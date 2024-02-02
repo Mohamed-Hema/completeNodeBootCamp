@@ -1,7 +1,8 @@
 const fs = require("fs");
 const http = require("http");
 const url = require("url");
-const path = require("path"); // Add this line to import the 'path' module
+const path = require("path");
+const slugify = require("slugify");
 const replaceTemplate = require("./modules/replaceTemplate");
 
 const tempOverview = fs.readFileSync(
